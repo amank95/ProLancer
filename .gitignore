@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+build/
+out/
 *.local
 
 # Editor directories and files
@@ -22,3 +24,41 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Environment variables (IMPORTANT!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache directories
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+._*
+*~
+
+# Temporary
+tmp/
+temp/
+*.tsbuildinfo
+
+# Package managers
+.pnpm-store/
+.yarn/cache
+.yarn/unplugged
