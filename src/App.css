@@ -1,0 +1,12 @@
+th {
+  @apply text-left text-sm text-gray-700 px-4 py-2;
+}
+
+tr{
+    @apply h-12;
+}
+
+td{
+    @apply text-left text-sm text-gray-700 px-4 py-2;
+}
+
