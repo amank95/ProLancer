@@ -1,0 +1,20 @@
+/* add.css */
+.form-label {
+  @apply text-gray-600 text-lg;
+}
+
+.form-input {
+  @apply p-5 border border-black outline-none;
+}
+
+.form-select {
+  @apply p-5 border border-black outline-none;
+}
+
+.form-textarea {
+  @apply p-5 border border-black outline-none;
+}
+
+.form-button {
+  @apply border-none p-5 bg-green-500 text-white font-medium text-lg cursor-pointer;
+}

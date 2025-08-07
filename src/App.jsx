@@ -13,15 +13,27 @@ import MyGigs from './pages/myGigs';
 import Add from './pages/add';
 import Messages from './pages/messages';
 import Message from './pages/message';
+import Login from './pages/login';
+import Register from './pages/register'
 import { createBrowserRouter,RouterProvider,Outlet } from 'react-router-dom';
+
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
+
 function App() {
+  const queryClient = new QueryClient();
 
   const Layout =() =>{
     return(
       <div>
+        <QueryClientProvider client={queryClient}> 
         <Navbar />
         <Outlet />
         <Footer/>
+         </QueryClientProvider>
       </div>
     )
   }
@@ -62,8 +74,18 @@ function App() {
           path: '/message/:id',
           element: <Message />
         },
+         {
+      path: "/register",
+      element: <Register />,
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
       ]
-    },]);
+    },
+ 
+  ]);
 
 
   const [count, setCount] = useState(0)

@@ -1,14 +1,49 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import MessageIcon from '@mui/icons-material/Message';
+import { useQuery } from "@tanstack/react-query";
+import API from '../api/api';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const orders = () => {
+const navigate = useNavigate();
 
-    const currentUser = {
-    id: 1,
-    username: "John Doe",
-    isSeller: true,
-  };
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+      const { isLoading, error, data } = useQuery({
+    queryKey: ['orders'],
+    queryFn: () =>
+        API.get(`/orders`)
+        .then((res) => {
+          return res.data;
+        })
+  })
+
+  const handleContact = async(order) => {
+    const sellerId = order.sellerId;
+    const buyerId = currentUser._id;
+    const id = sellerId + buyerId;
+
+    try {
+       const res = await API.get(`/conversations/single/${id}`);
+      navigate(`/messages/${res.data._id}`);
+      
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        // If conversation not found, create a new one
+        const res =await API.post(`/conversations`, {
+          to: currentUser.seller ? buyerId : sellerId,
+          isSeller: false,
+        });
+        navigate(`/messages/${res.data._id}`);
+      }
+      
+    }
+   
+
+  }
 
   return (
     <div className='flex justify-center'>
@@ -21,46 +56,49 @@ const orders = () => {
         </Link> */}
         </div>
         <table className='w-full'>
+           <thead>
           <tr className=''>
             <th className='text-left'>Image</th>
             <th>Title</th>
             <th>Price</th>
-            <th>Buyer</th>
+            {/* <th>Buyer</th> */}
             <th>Contact</th>
+          
           </tr>
-          <tr>
+            </thead> 
+           <tbody>
+          { isLoading ? (<tr>
+                <td colSpan={4} className="p-4 text-center">Loading...</td>
+              </tr>
+            )  : error ? (
+              <tr>
+                <td colSpan={4} className="p-4 text-center text-black">Not have Order yet</td>
+              </tr>
+            ) :
+            data.map(order =>(
+            <tr key={order._id} >
             <td>
               <img
               // image
                 className="w-[50px] h-6 object-cover"
-                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                src={order.img}
                 alt=""
               />
             </td>
-            <td>Stunning concept art</td>
-            <td>₹ 5999</td>
-            <td>13</td>
+            <td>{order.title}</td>
+            <td>₹ {order.price}</td>
+            {/* <td>13</td> */}
             <td>
-              <MessageIcon sx={{color:'blue',cursor:'pointer'}}/>
-                          </td>
+              <MessageIcon sx={{color:'blue',cursor:'pointer'}}
+              onClick={()=>handleContact(order)}
+              />
+            </td>
           </tr>
-          {/* <tr>
-            <td>
-              <img
-                className="image"
-                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-            </td>
-            <td>Ai generated concept art</td>
-            <td>120.<sup>99</sup></td>
-            <td>41</td>
-            <td>
-              <img className="delete" src="./img/delete.png" alt="" />
-            </td>
-          </tr> */}
+          ))}
+          </tbody>
         </table>
       </div>
+     
       </div>
   )
 }

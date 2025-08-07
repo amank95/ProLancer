@@ -1,14 +1,29 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import API from '../api/api';
+import moment from 'moment';
+import { m } from 'framer-motion';
 const messages = () => {
-      const currentUser = {
-    id: 1,
-    username: "John Doe",
-    isSeller: true,
-  };
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const { isLoading, error, data } = useQuery({
+    queryKey: ["conversations"],
+    queryFn: () =>
+      API.get(`/conversations`).then((res) => {
+        return res.data;
+      }),
+  });
+       const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (id) => API.put(`/conversations${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["conversations"]);
+    },
+  });
 
-  const message ='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro, adipisci labore qui sequi distinctio reprehenderit omnis ratione asperiores repellendus pariatur, dolores recusandae tempora assumenda eligendi sint ad illo exercitationem! Reprehenderit?'
+  const handleRead =(id) => {
+ mutation.mutate(id);
+  }
   return (
     <div className='flex justify-center'>
       <div className='w-[1400px] py-12 px-0'>
@@ -26,28 +41,33 @@ const messages = () => {
             <th>Date</th>
             <th>Action</th>
           </tr>
-          <tr className='h-24'>
+
+          {isLoading ? ( "Loading..." ) : error ? ( "No conversation started yet" ) : (
+            data.map((c) => (  
+                      <tr className={
+              (currentUser.isSeller && !c.readBySeller ) || 
+              ( !currentUser.isSeller && !c.readBySeller) && " h-24 active:bg-[#1dbf730f]" }
+                       key={c.id}>
             <td className='font-medium'>
-              John Doe
+             {currentUser.isSeller ? c.buyerId : c.sellerId}
             </td>
-            <td><Link to="/message/123">{message.substring(0,100)}...</Link></td>
-            <td>1 day ago</td>
+            <td><Link to={`/message/${c.id}`}>{c?.lastMessage?.substring(0,100)}...</Link></td>
+            <td>{moment(c.updatedAt).fromNow()}</td>
    
-            <td>
-           <button className='bg-green-500 text-white font-medium p-2 cursor-pointer'>Mark as Read</button>
+            <td>{
+              (currentUser.isSeller && !c.readBySeller ) || 
+              ( !currentUser.isSeller && !c.readBySeller) && 
+          ( <button 
+            className='bg-green-500 text-white font-medium p-2 cursor-pointer' 
+            onClick={()=>handleRead(c.id)}
+            >Mark as Read</button>)
+           }
+              
             </td>
-          </tr>
-          <tr className='h-24'>
-            <td className='font-medium'>
-              John Doe
-            </td>
-            <td><Link to='/message/123'>{message.substring(0,100)}...</Link></td>
-            <td>1 day ago</td>
-   
-            {/* <td>
-           <button className='bg-green-500 text-white font-medium p-2 cursor-pointer'>Mark as Read</button>
-            </td> */}
-          </tr>
+          </tr>  
+           )))}
+
+
 
         </table>
       </div>

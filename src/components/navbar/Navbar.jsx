@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import NavbarTwo from './NavbarTwo';
-import userImg from '../../assets/react.svg';
+import { Avatar } from "@mui/material";
+import { deepPurple } from "@mui/material/colors";
+import API from '../../api/api';
+// import userImg from '../../assets/react.svg';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [showNavbarTwo, setShowNavbarTwo] = useState(false);
-
+    const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate()
   const {pathname}= useLocation()
   // Mock current user data
-  const currentUser = {
-    id: 1,
-    username: "John Doe",
-    isSeller: true,
-  };
+ const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   // 👇 Add scroll listener
   useEffect(() => {
@@ -31,6 +31,19 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+    const handleUserClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleLogout =async()=>{
+    try {
+      await API.post("/auth/logout");
+      localStorage.setItem("currentUser",null);
+      navigate("/")
+    } catch (error) {
+      
+    }
+  }
   return (
     <>
      {pathname=="/" || pathname !=="/"? <div className="flex justify-between items-center p-4 bg-gray-100 shadow-md sticky top-0 z-50">
@@ -50,14 +63,41 @@ const Navbar = () => {
           <span>Fiverr Business</span>
           <span>Explore</span>
           <span>English</span>
-          <span>Sign in</span>
+          {/* <span>Sign in</span> */}
           {!currentUser?.isSeller && <span>Become a Seller</span>}
           {!currentUser && (
+            <Link to="/login">
             <button className="bg-blue-500 text-white px-3 py-1 border hover:border-black rounded hover:bg-gray-200 hover:text-black">Join</button>
+            </Link>
           )}
           {currentUser && (
             <div className="flex items-center gap-3 relative" onClick={() => setOpen(!open)}>
-              <img className="w-8 h-8 rounded-full object-cover cursor-pointer" src={userImg} alt='user' />
+              {/* <img className="w-8 h-8 rounded-full object-cover cursor-pointer" src={userImg} alt='user' /> */}
+
+              {currentUser.img ? (
+      <img
+        className="w-8 h-8 rounded-full object-cover cursor-pointer"
+        src={currentUser.img}
+        alt="user"
+      />
+    ) : (
+      <Avatar
+        onClick={handleUserClick}
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        sx={{
+          bgcolor: deepPurple[500],
+          color: "white",
+          cursor: "pointer",
+          width: 32,
+          height: 32,
+          fontSize: 14,
+        }}
+      >
+        {currentUser?.username?.[0]?.toUpperCase() || "U"}
+      </Avatar>
+    )}
               <span className="text-sm font-semibold">{currentUser?.username}</span>
 
               {/* dropdown menu / options for user */}
@@ -71,7 +111,7 @@ const Navbar = () => {
                   )}
                   <Link to={"/orders"} className='hover:text-gray-800 cursor-pointer'>Orders</Link>
                   <Link to={"/messages"} className='hover:text-gray-800 cursor-pointer'>Messages</Link>
-                  <Link to={"/"} className='hover:text-gray-800 cursor-pointer'>Logout</Link>
+                  <Link onClick={handleLogout} className='hover:text-gray-800 cursor-pointer'>Logout</Link>
                 </div>
               )}
             </div>

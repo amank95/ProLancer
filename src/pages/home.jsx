@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Featured from '../components/featured/Featured'
 import Slide from '../components/slide/Slide'
 import {cards} from '../data'
@@ -8,15 +8,37 @@ import ProjectCard from '../components/projectCard/projectCard'
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import videoImg from "../assets/video/Banner.mp4"
 import { motion } from "framer-motion";
+import API from '../api/api';
+import { useQuery } from '@tanstack/react-query'
 const home = () => {
+
+  const currentUser = JSON.parse(localStorage.getItem("currentUser")); // assuming you store user info here
+
+
+const { isLoading, error, data } = useQuery({
+  queryKey: ['gigs', currentUser?._id],  // Add dependency if user changes
+  queryFn: () =>
+        API.get(`/gigs`).then((res) => {
+          return res.data;
+        }),
+});
+  
+
   return (
     <div>
       <Featured/>
-      <Slide slidesToShow={5} arrowsScroll={3} >
-        {cards.map(card=>(
-            <CatCard key={card.id} item={card} />
+ {/* Slide for categories */}
+      {isLoading ? (
+        <div className="text-center py-6 text-lg">Loading categories...</div>
+      ) : error ? (
+        <div className="text-center py-6 text-red-500">Failed to load categories.</div>
+      ) : (
+        <Slide slidesToShow={5} arrowsScroll={3}>
+          {data?.map(card => (
+            <CatCard key={card._id} item={card} />
           ))}
-      </Slide>
+        </Slide>
+      )}
       {/* features */}
       <div className="bg-[#D86D8B] flex justify-center py-[60px] px-0 text-white">
         {/* container */}
