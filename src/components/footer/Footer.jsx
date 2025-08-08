@@ -42,8 +42,8 @@ const Footer = () => {
             <h2 className='text-base font-semibold text-gray-950'>Support</h2>
             <span className='font-light '>Help & Support</span>
             <span className='font-light '>Trust & Safety</span>
-            <span className='font-light '>Selling on Liverr</span>
-            <span className='font-light '>Buying on Liverr</span>
+            <span className='font-light '>Selling on ProLancer</span>
+            <span className='font-light '>Buying on ProLancer</span>
           </div>
           <div className=" flex flex-col gap-4">
             <h2 className='text-base font-semibold text-gray-950'>Community</h2>
@@ -61,14 +61,14 @@ const Footer = () => {
           </div>
           <div className=" flex flex-col gap-4">
             <h2 className='text-base font-semibold text-gray-950'>More From Fiverr</h2>
-            <span className='font-light '>Liverr Business</span>
-            <span className='font-light '>Liverr Pro</span>
-            <span className='font-light '>Liverr Logo Maker</span>
-            <span className='font-light '>Liverr Guides</span>
+            <span className='font-light '>ProLancer Business</span>
+            <span className='font-light '>ProLancer Pro</span>
+            <span className='font-light '>ProLancer Logo Maker</span>
+            <span className='font-light '>ProLancer Guides</span>
             <span className='font-light '>Get Inspired</span>
-            <span className='font-light '>Liverr Select</span>
+            <span className='font-light '>ProLancer Select</span>
             <span className='font-light '>ClearVoice</span>
-            <span className='font-light '>Liverr Workspace</span>
+            <span className='font-light '>ProLancer Workspace</span>
             <span className='font-light '>Learn</span>
             <span className='font-light '>Working Not Working</span>
           </div>

@@ -50,8 +50,8 @@ const Navbar = () => {
         {/* LEFT: Logo */}
         <div className="flex items-center gap-2">
           <Link to="/" >
-          <span className="text-xl font-bold">Fiverr
-            <span className="text-xl font-bold text-blue-600">Clone</span>
+          <span className="text-xl font-bold">Pro
+            <span className="text-xl font-bold text-blue-600">Lancer</span>
             <span className="text-xl font-bold text-blue-600">.</span>
             
           </span>
