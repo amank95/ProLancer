@@ -6,7 +6,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import API from "../api/api";
 const message = () => {
   const { id } = useParams();
-
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const queryClient = useQueryClient();
   const { isLoading, error, data } = useQuery({
     queryKey: ["messages"],
     queryFn: () =>
@@ -15,9 +16,8 @@ const message = () => {
       }),
   });
 
-  const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (message) => API.put(`/messages`, message),
+    mutationFn: (message) => API.post(`/messages`, message),
     onSuccess: () => {
       queryClient.invalidateQueries(["messages"]);
     },
@@ -36,7 +36,7 @@ const message = () => {
     <div className=" flex justify-center">
       <div className="w-[1200px] m-12">
         <span className="font-light text-xs text-gray-600">
-          <Link to="/messages">Messages</Link> > John Doe >
+          <Link to="/messages">Messages</Link> {">"} John Doe {">"} 
         </span>
         {isLoading ? (
           "Loading..."

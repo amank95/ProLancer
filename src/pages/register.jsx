@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import upload from "../utils/upload";
 import API from "../api/api"; //  an API for making requests
 import { useNavigate } from "react-router-dom";
-
 const register = () => {
   const [file,setFile]=useState(null)
   const [user, setUser] = useState({
@@ -56,7 +55,16 @@ const handleInputChange = (e) => {
         { ...user,
           img: url }
       );
+
       console.log({ ...user, img: url });
+       // Auto-login after registration
+      const loginRes = await API.post("/auth/login", {
+        name: user.username,
+        password: user.password
+      });
+
+      // Save token/user data for session
+      localStorage.setItem("currentUser", JSON.stringify(loginRes.data));
 
       alert("Registration successful");
     navigate("/");

@@ -5,7 +5,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import API from "../api/api";
 import { Reviews } from "../components/reviews/Reviews";
 const gig = () => {
@@ -222,9 +222,11 @@ const userId = data?.userId; // Assuming the gig data contains a userId field
                 </div>
               ))}
             </div>
+            <Link to={`/pay/${id}`}>
             <button className="bg-green-500 text-white p-2 font-medium cursor-pointer">
               Continue
             </button>
+            </Link>
           </div>
         </div>
       )}

@@ -1,10 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ManImg from '../../assets/man.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 
 const Featured = () => {
+  const [input, setInput] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+  navigate(`/gigs?search=${input}`); // Redirects to the gigs page with the search query
+  }
   return (
     //featured
     <div className='h-[600] pl-6 flex items-center justify-between bg-[#F8FAFC] gap-10'>
@@ -19,10 +26,10 @@ const Featured = () => {
                   <div className='flex items-center gap-2 border border-gray-300 p-1 rounded-lg w-full'> 
                     {/* <img src='' alt=''/> */}
                     <FontAwesomeIcon icon={faMagnifyingGlass} style={{ color: "#74C0FC" }} />
-                    <input className='border-none outline-none w-full' type='text' placeholder='Try "building mobile app"'/>
+                    <input className='border-none outline-none w-full' type='text' placeholder='Try "building mobile app"' onChange={e=>setInput(e.target.value)}/>
 
                   </div>
-                  <button className='w-[80px] font-serif font-semibold hover:text-blue-500'>Search</button>   
+                  <button className='w-[80px] font-serif font-semibold hover:text-blue-500' onClick={handleSubmit}>Search</button>   
                 </div>
                 {/* popular */}
                 <div className='flex items-center gap-3 text-gray-600 font-serif'>

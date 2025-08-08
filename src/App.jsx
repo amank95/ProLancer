@@ -15,6 +15,8 @@ import Messages from './pages/messages';
 import Message from './pages/message';
 import Login from './pages/login';
 import Register from './pages/register'
+import Pay from './pages/pay';
+import Success from './pages/success';
 import { createBrowserRouter,RouterProvider,Outlet } from 'react-router-dom';
 
 import {
@@ -22,6 +24,7 @@ import {
   QueryClientProvider,
   useQuery,
 } from '@tanstack/react-query'
+
 
 function App() {
   const queryClient = new QueryClient();
@@ -81,6 +84,14 @@ function App() {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "/pay/:id",
+      element: <Pay />,
+    },
+    {
+      path: "/success",
+      element: <Success />,
     },
       ]
     },

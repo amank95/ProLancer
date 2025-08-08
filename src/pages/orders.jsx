@@ -20,11 +20,14 @@ const navigate = useNavigate();
           return res.data;
         })
   })
+  console.log( "Orders in data",data)
 
   const handleContact = async(order) => {
     const sellerId = order.sellerId;
     const buyerId = currentUser._id;
-    const id = sellerId + buyerId;
+    const id = currentUser.isSeller
+  ? currentUser._id + sellerId
+  : sellerId + currentUser._id;
 
     try {
        const res = await API.get(`/conversations/single/${id}`);

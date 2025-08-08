@@ -6,6 +6,7 @@ import moment from 'moment';
 import { m } from 'framer-motion';
 const messages = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  
     const { isLoading, error, data } = useQuery({
     queryKey: ["conversations"],
     queryFn: () =>
@@ -15,7 +16,7 @@ const messages = () => {
   });
        const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (id) => API.put(`/conversations${id}`),
+    mutationFn: (id) => API.put(`/conversations/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries(["conversations"]);
     },
@@ -35,40 +36,62 @@ const messages = () => {
         </Link> */}
         </div>
         <table className='w-full'>
+          <thead>
           <tr className='h-24'>
-            <th className='text-left'>Buyer</th>
+            <th className='text-left'>{currentUser.isSeller ? "Buyer" : "Seller"}</th>
             <th>Last Message</th>
             <th>Date</th>
             <th>Action</th>
           </tr>
+          </thead>
+          <tbody>
 
-          {isLoading ? ( "Loading..." ) : error ? ( "No conversation started yet" ) : (
-            data.map((c) => (  
-                      <tr className={
-              (currentUser.isSeller && !c.readBySeller ) || 
-              ( !currentUser.isSeller && !c.readBySeller) && " h-24 active:bg-[#1dbf730f]" }
-                       key={c.id}>
-            <td className='font-medium'>
-             {currentUser.isSeller ? c.buyerId : c.sellerId}
-            </td>
-            <td><Link to={`/message/${c.id}`}>{c?.lastMessage?.substring(0,100)}...</Link></td>
-            <td>{moment(c.updatedAt).fromNow()}</td>
-   
-            <td>{
-              (currentUser.isSeller && !c.readBySeller ) || 
-              ( !currentUser.isSeller && !c.readBySeller) && 
-          ( <button 
-            className='bg-green-500 text-white font-medium p-2 cursor-pointer' 
-            onClick={()=>handleRead(c.id)}
-            >Mark as Read</button>)
-           }
-              
-            </td>
-          </tr>  
-           )))}
+          {isLoading ? (  
+            <tr>
+              <td colSpan="4" className="text-center py-4">Loading...</td>
+            </tr>
+             ) : error ? ( 
+             <tr>
+      <td colSpan="4" className="text-center py-4">No conversation started yet</td>
+    </tr>
+             ) : (
+   data.map((c) => {
+      // Determine if the message is unread for the current user
+      const isUnread = (currentUser.isSeller && !c.readBySeller) || (!currentUser.isSeller && !c.readByBuyer);
+
+      return (
+        <tr 
+          key={c.id}
+          // Apply a background color if the message is unread
+          className={`h-24 ${isUnread ? 'bg-[#1dbf730f]' : ''}`}
+        >
+          <td className='font-medium'>
+            {currentUser.isSeller ? c.buyerId : c.sellerId}
+          </td>
+          <td>
+            <Link to={`/message/${c.id}`} className="block w-full h-full">
+              {c?.lastMessage?.substring(0, 100)}...
+            </Link>
+          </td>
+          <td>{moment(c.updatedAt).fromNow()}</td>
+          <td>
+            {/* Only show the button if the message is unread */}
+            {isUnread && (
+              <button 
+                className='bg-green-500 text-white font-medium p-2 cursor-pointer' 
+                onClick={() => handleRead(c.id)}
+              >
+                Mark as Read
+              </button>
+            )}
+          </td>
+        </tr>
+      );
+    })
+  )}
 
 
-
+          </tbody>
         </table>
       </div>
       </div>
