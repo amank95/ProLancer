@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Star from "../../assets/star.png";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import API from "../../api/api";
-import Review from "../review/review";
+import Review from "../review/Review";
 
 export const Reviews = ({ gigId }) => {
 
