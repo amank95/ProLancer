@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Featured from '../components/featured/Featured'
 import Slide from '../components/slide/Slide'
-import {cards} from '../data'
+
 import {projects} from '../data'
 import CatCard from '../components/catCard/catCard'
 import ProjectCard from '../components/projectCard/projectCard'

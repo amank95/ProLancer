@@ -21,6 +21,7 @@
     "@stripe/stripe-js": "^7.8.0",
     "@tanstack/react-query": "^5.84.1",
     "axios": "^1.11.0",
+    "framer-motion": "^12.23.12",
     "infinite-react-carousel": "^1.2.11",
     "moment": "^2.30.1",
     "react": "^19.1.0",
